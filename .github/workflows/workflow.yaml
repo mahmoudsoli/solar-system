@@ -22,7 +22,7 @@ jobs:
             - name: Nodejs setup
               uses: actions/setup-node@v4
               with:
-                node-version: 18 
+                node-version: 24 
             
             - name: Install Dependencies 
               run: npm install
@@ -35,6 +35,31 @@ jobs:
               with: 
                 name: mocha-test-result 
                 path: test-results.xml
+    
+    Code-Coverage:
+        runs-on: ubuntu-latest
+        name: Code-Coverage
+        steps:
+            - name: clone the repo 
+              uses: actions/checkout@v4 
+            
+            - name: Nodejs setup
+              uses: actions/setup-node@v4
+              with:
+                node-version: 24 
+            
+            - name: Install Dependencies 
+              run: npm install
+
+            - name: Check Code Coverage
+              run: npm run coverage
+            
+            - name: Archive Test Results 
+              uses: actions/upload-artifact@v4 
+              with: 
+                name: code-coverage
+                path: coverage
+                retention-days: 5
 
 
 
