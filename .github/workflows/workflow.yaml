@@ -101,7 +101,7 @@ jobs:
             -e MONGO_PASSWORD=$MONGO_PASSWORD \
             ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
             echo Testing Image URL using wget 
-            wget -q -0 - 127.0.0.1:3000/live | grep live
+            wget -q -O - 127.0.0.1:3000/live | grep live
         
         - name: Push
           uses: docker/build-push-action@v7
