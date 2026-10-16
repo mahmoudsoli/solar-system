@@ -1,0 +1,63 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+  workflow_dispatch:
+env:
+    MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+    MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
+    MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+
+jobs:
+  unit_testing:
+    name: Unit Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
+        run: npm test
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results
+          path: test-results.xml
+  
+  Code-Coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v7
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v7
+      with:
+        node-version: 24
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run code coverage
+      run: npm run coverage
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v7
+      with:
+        name: code-coverage
+        path: coverage
+        retention-days: 5
